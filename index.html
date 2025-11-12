@@ -1,389 +1,192 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Instagram-style Login</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram Login</title>
   <style>
-    :root{
-      --bg-start: #fafafa;
-      --bg-end: #ffffff;
-      --card-bg: #ffffff;
+    /* ---------- Root Styles ---------- */
+    :root {
+      --bg: #ffffff;
       --muted: #8e8e8e;
-      --input-border: #dbdbdb;
+      --border: #dbdbdb;
       --primary: #0095f6;
-      --logo-color: #000000;
-      --radius-card: 6px;
-      --radius-input: 4px;
-      --max-mobile-width: 420px;
-      --gap-vertical: 14px;
-      --card-login-width: 350px;
-      --card-signup-width: 360px;
-      --container-max-width: 980px;
-      --shadow: 0 6px 18px rgba(20,20,20,0.06);
-      --ease: cubic-bezier(.2,.9,.3,1);
+      --text: #262626;
+      --link: #00376b;
+      --radius: 8px;
+      --radius-pill: 22px;
     }
 
-    /* Reset & fonts */
-    *{box-sizing: border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:32px;
-      color:#111;
+    /* ---------- Global Reset ---------- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* Outer container: centers and limits width */
-    .page {
-      width:100%;
-      max-width: var(--container-max-width);
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    body {
+      background-color: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: var(--text);
+      padding: 20px;
     }
 
-    /* Layout: stacked under 880, side-by-side above */
-    .cards {
-      display:flex;
-      gap:40px;
-      align-items:flex-start;
-      justify-content:center;
-      flex-wrap:wrap;
-      width:100%;
+    /* ---------- Container ---------- */
+    .container {
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
     }
 
-    /* Individual card base */
-    .card {
-      background:var(--card-bg);
-      border-radius:var(--radius-card);
-      box-shadow: var(--shadow);
-      padding:28px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:var(--gap-vertical);
-      margin:6px;
+    /* ---------- Language ---------- */
+    .language {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
     }
 
-    /* Exact widths */
-    .card.login { width: min(calc(var(--card-login-width)), 97%); max-width: 100%; }
-    .card.signup { width: min(calc(var(--card-signup-width)), 97%); max-width: 100%; }
-
-    /* Language selector */
-    .lang {
-      font-size:13px;
-      color:var(--muted);
-      text-align:center;
-      width:100%;
-      margin-bottom:2px;
+    /* ---------- Logo ---------- */
+    .logo img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 25px;
     }
 
-    /* Logo */
-    .logo {
-      font-size:48px;
-      font-family: "Brush Script MT", "Pacifico", cursive;
-      color:var(--logo-color);
-      letter-spacing:0.5px;
-      margin-top:4px;
-      margin-bottom:2px;
-      transform-origin:center;
-      opacity:0;
-      animation: drop-in 420ms var(--ease) forwards;
+    /* ---------- Form ---------- */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    @keyframes drop-in {
-      from { transform: translateY(-8px) scale(.98); opacity:0 }
-      to   { transform: translateY(0) scale(1); opacity:1 }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* Form styles */
-    form { width:100%; display:flex; flex-direction:column; gap:12px; }
-    label { font-size:13px; color:var(--muted); display:block; }
-    .input {
-      width:100%;
-      padding:10px 12px;
-      font-size:14px;
-      border:1px solid var(--input-border);
-      border-radius:var(--radius-input);
-      outline:none;
-      background:transparent;
-      transition: box-shadow 160ms var(--ease), border-color 160ms var(--ease), transform 160ms var(--ease);
-    }
-    .input:focus {
-      box-shadow: 0 0 0 4px rgba(0,149,246,0.08);
+    input:focus {
       border-color: var(--primary);
-      transform: translateY(-1px);
+      box-shadow: 0 0 0 3px rgba(0,149,246,0.1);
     }
-    .button {
-      width:100%;
-      padding:10px 12px;
-      font-size:14px;
-      font-weight:700;
-      border-radius:var(--radius-input);
-      border: none;
-      cursor:pointer;
-      background:var(--primary);
+
+    /* ---------- Buttons ---------- */
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary);
       color: #fff;
-      outline:none;
-      transition: transform 120ms var(--ease), box-shadow 120ms var(--ease), opacity 120ms var(--ease);
+      font-weight: bold;
+      border: none;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s ease;
     }
-    .button:active { transform: translateY(1px); }
-    .button[disabled] { opacity:0.6; cursor:not-allowed; }
+
+    .login-btn:hover {
+      background-color: #007bd1;
+    }
 
     .forgot {
-      font-size:13px;
-      color:var(--muted);
-      text-align:center;
-      margin-top:6px;
-      text-decoration:none;
+      margin-top: 12px;
+      font-size: 13px;
     }
 
-    /* Divider OR */
+    .forgot a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    .forgot a:hover {
+      text-decoration: underline;
+    }
+
     .divider {
-      width:100%;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin:6px 0;
-    }
-    .divider hr {
-      flex:1;
-      border: none;
-      height:1px;
-      background: #e6e6e6;
-    }
-    .or {
-      color:var(--muted);
-      font-size:13px;
-      text-align:center;
-      min-width:28px;
+      height: 24px;
     }
 
-    /* Transparent create account button */
-    .ghost {
-      width:100%;
-      padding:10px 12px;
-      border-radius:var(--radius-input);
-      border:none;
-      background:transparent;
-      font-weight:700;
-      color:var(--primary);
-      cursor:pointer;
-      font-size:14px;
+    .create-btn {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      border-radius: var(--radius-pill);
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
     }
 
-    /* Meta footer */
+    .create-btn:hover {
+      background-color: rgba(0,149,246,0.05);
+    }
+
+    /* ---------- Footer (Meta) ---------- */
     .meta {
-      margin-top:6px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .meta img { width:18px; height:18px; display:block; opacity:0.9; }
-
-    /* Small responsive tweaks */
-    @media (max-width: 880px) {
-      .cards { gap:18px; flex-direction:column; align-items:center; padding: 8px; }
-      .card { padding:32px; }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 25px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
-    @media (min-width: 880px) {
-      .card { align-items:center; }
+    .meta svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--muted);
     }
 
-    /* Utility: subtle entrance */
-    .card { opacity:0; transform: translateY(8px); animation: fade-up 420ms var(--ease) forwards; }
-    .card.signup { animation-delay: 120ms; }
-    @keyframes fade-up {
-      to { opacity:1; transform: translateY(0); }
+    /* ---------- Responsive ---------- */
+    @media (min-height: 700px) {
+      body {
+        justify-content: center;
+      }
     }
-
-    /* Small helper for note text inside signup card */
-    .signup-note { font-size:13px; color:var(--muted); text-align:center; line-height:1.4; }
-
-    /* Small link style */
-    a.link { color:var(--primary); text-decoration:none; font-weight:600; }
   </style>
 </head>
 <body>
-  <main class="page" role="main" aria-label="Login page">
-    <section class="cards" aria-live="polite">
-      <!-- LOGIN CARD -->
-      <aside class="card login" aria-labelledby="login-heading">
-        <div class="lang" aria-hidden="true">English (US)</div>
+  <div class="container">
+    <div class="language">English (US)</div>
 
-        <div id="login-heading" class="logo" aria-hidden="false">Instagram</div>
+    <div class="logo">
+      <!-- Instagram gradient logo -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo" />
+    </div>
 
-        <form id="loginForm" novalidate>
-          <div>
-            <label for="username">Username, email or mobile number</label>
-            <input id="username" name="username" class="input"
-                   type="text" autocomplete="username" inputmode="email"
-                   aria-label="Username, email or mobile number"
-                   placeholder="Username or email" required>
-          </div>
+    <form class="form" onsubmit="event.preventDefault(); alert('Demo login - not functional');">
+      <input type="text" placeholder="Username, email or mobile number" required />
+      <input type="password" placeholder="Password" required />
+      <button class="login-btn" type="submit">Log in</button>
+    </form>
 
-          <div>
-            <label for="password">Password</label>
-            <input id="password" name="password" class="input"
-                   type="password" autocomplete="current-password"
-                   aria-label="Password" placeholder="Password" required>
-          </div>
+    <div class="forgot">
+      <a href="#">Forgot password?</a>
+    </div>
 
-          <button class="button" id="loginBtn" type="submit" aria-label="Log in to your account">Log In</button>
+    <div class="divider"></div>
 
-          <a href="#" class="forgot" id="forgotLink">Forgot password?</a>
+    <button class="create-btn">Create new account</button>
 
-          <div class="divider" aria-hidden="true">
-            <hr />
-            <div class="or">OR</div>
-            <hr />
-          </div>
-
-          <button type="button" class="ghost" id="createAccount" aria-label="Create a new account">Create new account</button>
-        </form>
-
-        <div class="meta" aria-hidden="true">
-          <!-- small meta icon (SVG) -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12c0 2.3.77 4.41 2.07 6.12L4 22l3.88-.83C9.59 21.23 10.79 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" fill="#8e8e8e"/>
-          </svg>
-          <div>Meta</div>
-        </div>
-      </aside>
-
-      <!-- SIGNUP CARD -->
-      <aside class="card signup" aria-labelledby="signup-heading">
-        <div id="signup-heading" class="logo" style="font-size:22px; margin-top:6px; margin-bottom:6px;">New here?</div>
-
-        <p class="signup-note">Sign up to see photos and videos from your friends.</p>
-
-        <form id="signupForm" novalidate>
-          <div>
-            <label for="newUsername">Mobile number or email</label>
-            <input id="newUsername" name="newUsername" class="input"
-                   type="email" autocomplete="email" inputmode="email"
-                   aria-label="Mobile number or email"
-                   placeholder="Email or mobile number" required>
-          </div>
-
-          <div>
-            <label for="fullName">Full name</label>
-            <input id="fullName" name="fullName" class="input"
-                   type="text" autocomplete="name"
-                   aria-label="Full name" placeholder="Full name" required>
-          </div>
-
-          <div>
-            <label for="newPassword">Password</label>
-            <input id="newPassword" name="newPassword" class="input"
-                   type="password" autocomplete="new-password"
-                   aria-label="Create password" placeholder="Password" required>
-          </div>
-
-          <button class="button" type="submit" aria-label="Create account">Sign up</button>
-
-          <div class="divider" aria-hidden="true" style="margin-top:6px;">
-            <hr />
-            <div class="or">OR</div>
-            <hr />
-          </div>
-
-          <p class="signup-note" style="margin-bottom:4px;">Have an account? <a href="#login" class="link" id="switchToLogin">Log in</a></p>
-        </form>
-
-      </aside>
-    </section>
-  </main>
-
-  <script>
-    // Accessibility + submission guards
-    (function(){
-      const loginForm = document.getElementById('loginForm');
-      const loginBtn = document.getElementById('loginBtn');
-      const username = document.getElementById('username');
-      const password = document.getElementById('password');
-
-      const signupForm = document.getElementById('signupForm');
-
-      function setBtnState(btn, enabled){
-        if(enabled){
-          btn.removeAttribute('disabled');
-        } else {
-          btn.setAttribute('disabled', 'disabled');
-        }
-      }
-
-      // Basic enable/disable logic for login
-      function checkLogin() {
-        const ok = username.value.trim().length > 0 && password.value.trim().length > 0;
-        setBtnState(loginBtn, ok);
-      }
-
-      username.addEventListener('input', checkLogin);
-      password.addEventListener('input', checkLogin);
-      checkLogin();
-
-      loginForm.addEventListener('submit', function(e){
-        e.preventDefault();
-        // final check
-        if(username.value.trim() === "" || password.value.trim() === "") {
-          username.focus();
-          return;
-        }
-        // Demo: show a lightweight success state and disable button briefly
-        setBtnState(loginBtn, false);
-        loginBtn.textContent = "Logging in…";
-        setTimeout(() => {
-          loginBtn.textContent = "Log In";
-          setBtnState(loginBtn, true);
-          alert("Demo: login submitted (no server).");
-        }, 900);
-      });
-
-      // Signup form: simple validation
-      signupForm.addEventListener('submit', function(e){
-        e.preventDefault();
-        const email = document.getElementById('newUsername').value.trim();
-        const fullName = document.getElementById('fullName').value.trim();
-        const newPass = document.getElementById('newPassword').value.trim();
-        if(!email || !fullName || !newPass) {
-          // focus first missing
-          (email || fullName || newPass) && null;
-          if(!email) { document.getElementById('newUsername').focus(); return; }
-          if(!fullName) { document.getElementById('fullName').focus(); return; }
-          if(!newPass) { document.getElementById('newPassword').focus(); return; }
-        }
-        alert("Demo: signup submitted (no server).");
-      });
-
-      // Switch link: move focus to login
-      document.getElementById('switchToLogin').addEventListener('click', function(e){
-        e.preventDefault();
-        username.focus();
-        // On larger screens, visually scroll is unnecessary, but ensure focus
-      });
-
-      // "Forgot" link handler (demo)
-      document.getElementById('forgotLink').addEventListener('click', function(e){
-        e.preventDefault();
-        const email = username.value.trim();
-        const msg = email ? `Password reset link would be sent to ${email} (demo).` : "Please enter username or email above to reset password.";
-        alert(msg);
-      });
-
-      // Keyboard: pressing Enter on inputs of login triggers form automatically (native)
-    })();
-  </script>
+    <div class="meta">
+      <!-- Meta logo -->
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.11 10.23c1.51-2.28 3.6-4.23 5.17-4.23 1.25 0 2.3 1.1 2.3 3.56 0 2.82-1.43 6.73-3.28 6.73-.97 0-2.04-1.13-3.1-2.87a30.06 30.06 0 0 0-1.09-1.58zm-.22 0c-1.51-2.28-3.6-4.23-5.17-4.23-1.25 0-2.3 1.1-2.3 3.56 0 2.82 1.43 6.73 3.28 6.73.97 0 2.04-1.13 3.1-2.87.34-.52.69-1.06 1.09-1.58zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+      </svg>
+      <span>Meta</span>
+    </div>
+  </div>
 </body>
 </html>
