@@ -1,192 +1,227 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Instagram Login</title>
-  <style>
-    /* ---------- Root Styles ---------- */
-    :root {
-      --bg: #ffffff;
-      --muted: #8e8e8e;
-      --border: #dbdbdb;
-      --primary: #0095f6;
-      --text: #262626;
-      --link: #00376b;
-      --radius: 8px;
-      --radius-pill: 22px;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Instagram-style Login (Demo)</title>
+<style>
+  :root{
+    --bg: #ffffff;
+    --muted: #8e8e8e;
+    --input-border: #e6e6e6;
+    --primary: #0b71e3; /* button blue similar to screenshot */
+    --text: #222;
+    --pill-radius: 999px;
+    --field-radius: 14px;
+    --container-w: 360px;
+  }
 
-    /* ---------- Global Reset ---------- */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+  /* Reset */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing:antialiased;
+    background:var(--bg);
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:28px 12px;
+    color:var(--text);
+  }
 
-    body {
-      background-color: var(--bg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      color: var(--text);
-      padding: 20px;
-    }
+  /* Outer */
+  .wrap{
+    width:100%;
+    max-width:var(--container-w);
+    text-align:center;
+    margin-top:18px;
+  }
 
-    /* ---------- Container ---------- */
-    .container {
-      max-width: 360px;
-      width: 100%;
-      text-align: center;
-    }
+  /* Language */
+  .lang{
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:12px;
+  }
 
-    /* ---------- Language ---------- */
-    .language {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
+  /* Instagram glyph (centered) */
+  .logo {
+    width:72px;
+    height:72px;
+    margin: 8px auto 26px;
+  }
 
-    /* ---------- Logo ---------- */
-    .logo img {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 25px;
-    }
+  /* Form card spacing like screenshot (no visible card border; white page) */
+  form{ display:flex; flex-direction:column; gap:12px; align-items:center; }
 
-    /* ---------- Form ---------- */
-    .form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+  /* Inputs: large rounded rectangles with subtle border */
+  .field {
+    width:100%;
+    background:white;
+    border-radius:var(--field-radius);
+    border: 1.6px solid var(--input-border);
+    padding:18px 16px;           /* taller like screenshot */
+    font-size:16px;
+    color:var(--muted);
+    outline:none;
+    transition: box-shadow .15s ease, border-color .12s ease;
+    text-align:left;
+  }
+  .field::placeholder{ color: #9aa1a8; } /* placeholder muted */
+  .field:focus{
+    border-color: rgba(11,113,227,0.95);
+    box-shadow: 0 6px 18px rgba(11,113,227,0.08);
+    color: #333;
+  }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      font-size: 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
+  /* Large pill log in button */
+  .btn-login{
+    width:100%;
+    padding:12px 18px;
+    border-radius:var(--pill-radius);
+    border:none;
+    background:var(--primary);
+    color:#fff;
+    font-weight:600;
+    font-size:18px;
+    cursor:pointer;
+    box-shadow: 0 8px 18px rgba(11,113,227,0.12);
+    transition: transform .08s ease, opacity .12s ease;
+  }
+  .btn-login:active{ transform: translateY(1px); }
+  .btn-login[disabled]{ opacity:.6; cursor:not-allowed; box-shadow:none; }
 
-    input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(0,149,246,0.1);
-    }
+  /* Forgot password */
+  .forgot{
+    margin-top:10px;
+    font-size:15px;
+  }
+  .forgot a{ color:var(--text); text-decoration:none; font-weight:500; }
+  .forgot a:hover { text-decoration:underline; color:#000; }
 
-    /* ---------- Buttons ---------- */
-    .login-btn {
-      width: 100%;
-      padding: 12px;
-      background-color: var(--primary);
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.2s ease;
-    }
+  /* Divider spacer before create account */
+  .spacer{ height:38px; }
 
-    .login-btn:hover {
-      background-color: #007bd1;
-    }
+  /* Outline create button */
+  .btn-create{
+    width:100%;
+    padding:12px 18px;
+    border-radius:var(--pill-radius);
+    border:2px solid var(--primary);
+    background:transparent;
+    color:var(--primary);
+    font-weight:700;
+    font-size:16px;
+    cursor:pointer;
+  }
+  .btn-create:active{ transform: translateY(1px); }
 
-    .forgot {
-      margin-top: 12px;
-      font-size: 13px;
-    }
+  /* Meta footer */
+  .meta{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    justify-content:center;
+    margin-top:18px;
+    color:var(--muted);
+    font-size:13px;
+  }
+  .meta svg{ width:18px; height:18px; fill:var(--muted); opacity:.95; }
 
-    .forgot a {
-      color: var(--link);
-      text-decoration: none;
-    }
-
-    .forgot a:hover {
-      text-decoration: underline;
-    }
-
-    .divider {
-      height: 24px;
-    }
-
-    .create-btn {
-      width: 100%;
-      padding: 11px;
-      border: 1px solid var(--primary);
-      background: transparent;
-      color: var(--primary);
-      border-radius: var(--radius-pill);
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .create-btn:hover {
-      background-color: rgba(0,149,246,0.05);
-    }
-
-    /* ---------- Footer (Meta) ---------- */
-    .meta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 25px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .meta svg {
-      width: 16px;
-      height: 16px;
-      fill: var(--muted);
-    }
-
-    /* ---------- Responsive ---------- */
-    @media (min-height: 700px) {
-      body {
-        justify-content: center;
-      }
-    }
-  </style>
+  /* Small screens center vertically more (looks like screenshot) */
+  @media (max-height:700px){
+    body{ align-items:flex-start; }
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="language">English (US)</div>
+  <main class="wrap" role="main" aria-labelledby="page-title">
+    <div id="page-title" class="sr-only" style="display:none">Login</div>
 
-    <div class="logo">
-      <!-- Instagram gradient logo -->
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo" />
-    </div>
+    <div class="lang">English (US)</div>
 
-    <form class="form" onsubmit="event.preventDefault(); alert('Demo login - not functional');">
-      <input type="text" placeholder="Username, email or mobile number" required />
-      <input type="password" placeholder="Password" required />
-      <button class="login-btn" type="submit">Log in</button>
-    </form>
-
-    <div class="forgot">
-      <a href="#">Forgot password?</a>
-    </div>
-
-    <div class="divider"></div>
-
-    <button class="create-btn">Create new account</button>
-
-    <div class="meta">
-      <!-- Meta logo -->
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12.11 10.23c1.51-2.28 3.6-4.23 5.17-4.23 1.25 0 2.3 1.1 2.3 3.56 0 2.82-1.43 6.73-3.28 6.73-.97 0-2.04-1.13-3.1-2.87a30.06 30.06 0 0 0-1.09-1.58zm-.22 0c-1.51-2.28-3.6-4.23-5.17-4.23-1.25 0-2.3 1.1-2.3 3.56 0 2.82 1.43 6.73 3.28 6.73.97 0 2.04-1.13 3.1-2.87.34-.52.69-1.06 1.09-1.58zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+    <!-- Instagram gradient glyph inline SVG for exact look -->
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 512 512" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Instagram">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#f58529"/>
+            <stop offset="0.25" stop-color="#dd2a7b"/>
+            <stop offset="0.5" stop-color="#8134af"/>
+            <stop offset="0.75" stop-color="#515bd4"/>
+            <stop offset="1" stop-color="#f58529"/>
+          </linearGradient>
+        </defs>
+        <rect x="48" y="48" width="416" height="416" rx="96" ry="96" fill="url(#g)"></rect>
+        <rect x="88" y="88" width="336" height="336" rx="84" ry="84" fill="#fff" transform="translate(0,0) scale(1)"></rect>
+        <!-- simplified inner circle to mimic glyph -->
+        <circle cx="256" cy="256" r="88" fill="url(#g)"></circle>
+        <circle cx="256" cy="256" r="72" fill="#fff"></circle>
+        <circle cx="256" cy="256" r="36" fill="url(#g)"></circle>
+        <!-- small dot -->
+        <circle cx="360" cy="152" r="18" fill="url(#g)"></circle>
       </svg>
-      <span>Meta</span>
     </div>
-  </div>
+
+    <!-- Form (demo only) -->
+    <form id="authForm" autocomplete="on" onsubmit="return false" aria-describedby="desc">
+      <input id="username" class="field" type="text" autocomplete="username" placeholder="Username, email or mobile number" required />
+      <input id="password" class="field" type="password" autocomplete="current-password" placeholder="Password" required />
+      <button id="loginBtn" class="btn-login" disabled aria-label="Log in">Log in</button>
+
+      <div class="forgot" style="margin-top:14px;">
+        <a href="#" id="forgot">Forgot password?</a>
+      </div>
+
+      <div class="spacer"></div>
+
+      <button id="createBtn" class="btn-create">Create new account</button>
+
+      <div class="meta" aria-hidden="true">
+        <!-- Meta symbol (simple) -->
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12.11 10.23c1.51-2.28 3.6-4.23 5.17-4.23 1.25 0 2.3 1.1 2.3 3.56 0 2.82-1.43 6.73-3.28 6.73-.97 0-2.04-1.13-3.1-2.87a30.06 30.06 0 0 0-1.09-1.58zm-.22 0c-1.51-2.28-3.6-4.23-5.17-4.23-1.25 0-2.3 1.1-2.3 3.56 0 2.82 1.43 6.73 3.28 6.73.97 0 2.04-1.13 3.1-2.87.34-.52.69-1.06 1.09-1.58zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path>
+        </svg>
+        <span>Meta</span>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    // Minimal JS: enable login button only when both fields non-empty.
+    (function(){
+      const u = document.getElementById('username');
+      const p = document.getElementById('password');
+      const btn = document.getElementById('loginBtn');
+
+      function update(){
+        const ok = u.value.trim().length > 0 && p.value.trim().length > 0;
+        if(ok) btn.removeAttribute('disabled'); else btn.setAttribute('disabled','');
+      }
+      u.addEventListener('input', update);
+      p.addEventListener('input', update);
+
+      // Demo click: do not submit credentials anywhere
+      btn.addEventListener('click', () => {
+        if(btn.hasAttribute('disabled')) return;
+        btn.textContent = 'Logging in…';
+        btn.setAttribute('disabled','');
+        setTimeout(()=> {
+          alert('Demo login — no server. Replace this with your own secure backend.');
+          btn.textContent = 'Log in';
+          update();
+        }, 900);
+      });
+
+      // Demo forgot
+      document.getElementById('forgot').addEventListener('click', (e)=>{
+        e.preventDefault();
+        const v = u.value.trim();
+        alert(v ? `Demo: password reset link would be sent to ${v}` : 'Enter username or email above to reset password (demo).');
+      });
+    })();
+  </script>
 </body>
 </html>
