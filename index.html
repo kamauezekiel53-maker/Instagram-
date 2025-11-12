@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Instagram Login</title>
   <style>
-    /* ---------- Root Styles ---------- */
     :root {
       --bg: #ffffff;
       --muted: #8e8e8e;
@@ -17,7 +16,6 @@
       --radius-pill: 22px;
     }
 
-    /* ---------- Global Reset ---------- */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -36,28 +34,24 @@
       padding: 20px;
     }
 
-    /* ---------- Container ---------- */
     .container {
       max-width: 360px;
       width: 100%;
       text-align: center;
     }
 
-    /* ---------- Language ---------- */
     .language {
       font-size: 13px;
       color: var(--muted);
       margin-bottom: 20px;
     }
 
-    /* ---------- Logo ---------- */
     .logo img {
       width: 60px;
       height: 60px;
       margin-bottom: 25px;
     }
 
-    /* ---------- Form ---------- */
     .form {
       display: flex;
       flex-direction: column;
@@ -65,8 +59,7 @@
     }
 
     input {
-      width: 100%;
-      padding: 12px;
+      width: : 12px;
       font-size: 14px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -79,7 +72,6 @@
       box-shadow: 0 0 0 3px rgba(0,149,246,0.1);
     }
 
-    /* ---------- Buttons ---------- */
     .login-btn {
       width: 100%;
       padding: 12px;
@@ -132,7 +124,6 @@
       background-color: rgba(0,149,246,0.05);
     }
 
-    /* ---------- Footer (Meta) ---------- */
     .meta {
       display: flex;
       align-items: center;
@@ -149,7 +140,13 @@
       fill: var(--muted);
     }
 
-    /* ---------- Responsive ---------- */
+    .error {
+      color: red;
+      font-size: 13px;
+      margin-top: -8px;
+      margin-bottom: 8px;
+    }
+
     @media (min-height: 700px) {
       body {
         justify-content: center;
@@ -162,14 +159,14 @@
     <div class="language">English (US)</div>
 
     <div class="logo">
-      <!-- Instagram gradient logo -->
       <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo" />
     </div>
 
-    <form class="form" onsubmit="event.preventDefault(); alert('Demo login - not functional');">
-      <input type="text" placeholder="Username, email or mobile number" required />
-      <input type="password" placeholder="Password" required />
-      <button class="login-btn" type="submit">Log in</button>
+    <form class="form" id="loginForm">
+      <input type="text" id="username" placeholder="Username, email or mobile number" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <div class="error" id="errorMsg"></div>
+      <button class="login-btn" type="submit" id="loginBtn">Log in</button>
     </form>
 
     <div class="forgot">
@@ -178,15 +175,47 @@
 
     <div class="divider"></div>
 
-    <button class="create-btn">Create new account</button>
+    <button class="create-btn" id="createBtn">Create new account</button>
 
     <div class="meta">
-      <!-- Meta logo -->
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M12.11 10.23c1.51-2.28 3.6-4.23 5.17-4.23 1.25 0 2.3 1.1 2.3 3.56 0 2.82-1.43 6.73-3.28 6.73-.97 0-2.04-1.13-3.1-2.87a30.06 30.06 0 0 0-1.09-1.58zm-.22 0c-1.51-2.28-3.6-4.23-5.17-4.23-1.25 0-2.3 1.1-2.3 3.56 0 2.82 1.43 6.73 3.28 6.73.97 0 2.04-1.13 3.1-2.87.34-.52.69-1.06 1.09-1.58zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
       </svg>
       <span>Meta</span>
     </div>
   </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const createBtn = document.getElementById('createBtn');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      errorMsg.textContent = '';
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Logging in...';
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      setTimeout(() => {
+        if (username === 'demo' && password === 'demo123') {
+          alert('Login successful!');
+          form.reset();
+        } else {
+          errorMsg.textContent = 'Invalid username or password.';
+        }
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Log in';
+      }, 1200);
+    });
+
+    createBtn.addEventListener('click', () => {
+      alert('Redirecting to account creation...');
+      // window.location.href = '/signup.html'; // Uncomment for real redirect
+    });
+  </script>
 </body>
 </html>
