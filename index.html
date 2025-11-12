@@ -3,223 +3,387 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Simple Instagram-style Login</title>
+  <title>Instagram-style Login</title>
+
   <style>
     :root{
-      --bg:#fafafa;
-      --card:#fff;
-      --muted:#8e8e8e;
-      --accent:#0095f6; /* blue login button */
-      --input-border:#dbdbdb;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --bg-start: #fafafa;
+      --bg-end: #ffffff;
+      --card-bg: #ffffff;
+      --muted: #8e8e8e;
+      --input-border: #dbdbdb;
+      --primary: #0095f6;
+      --logo-color: #000000;
+      --radius-card: 6px;
+      --radius-input: 4px;
+      --max-mobile-width: 420px;
+      --gap-vertical: 14px;
+      --card-login-width: 350px;
+      --card-signup-width: 360px;
+      --container-max-width: 980px;
+      --shadow: 0 6px 18px rgba(20,20,20,0.06);
+      --ease: cubic-bezier(.2,.9,.3,1);
     }
 
+    /* Reset & fonts */
+    *{box-sizing: border-box}
     html,body{height:100%}
     body{
       margin:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:linear-gradient(180deg,#fff 0%,var(--bg) 100%);
-      color:#111;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:24px;
+      background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+      color:#111;
     }
 
-    .wrap{
+    /* Outer container: centers and limits width */
+    .page {
       width:100%;
-      max-width:980px;
+      max-width: var(--container-max-width);
       display:flex;
-      gap:40px;
       align-items:center;
       justify-content:center;
     }
 
-    /* card */
-    .card{
+    /* Layout: stacked under 880, side-by-side above */
+    .cards {
+      display:flex;
+      gap:40px;
+      align-items:flex-start;
+      justify-content:center;
+      flex-wrap:wrap;
       width:100%;
-      max-width:350px;
-      background:var(--card);
-      border:1px solid var(--input-border);
-      padding:28px 40px;
-      box-sizing:border-box;
-      text-align:center;
-      border-radius:6px;
-      box-shadow:0 1px 2px rgba(0,0,0,0.03);
     }
 
-    /* top language */
-    .lang{
+    /* Individual card base */
+    .card {
+      background:var(--card-bg);
+      border-radius:var(--radius-card);
+      box-shadow: var(--shadow);
+      padding:28px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:var(--gap-vertical);
+      margin:6px;
+    }
+
+    /* Exact widths */
+    .card.login { width: min(calc(var(--card-login-width)), 97%); max-width: 100%; }
+    .card.signup { width: min(calc(var(--card-signup-width)), 97%); max-width: 100%; }
+
+    /* Language selector */
+    .lang {
       font-size:13px;
       color:var(--muted);
       text-align:center;
-      margin-bottom:18px;
+      width:100%;
+      margin-bottom:2px;
     }
 
-    /* logo (simple text SVG-like) */
-    .logo{
-      font-family: "Brush Script MT", "cursive";
+    /* Logo */
+    .logo {
       font-size:48px;
-      letter-spacing:1px;
-      margin:6px 0 20px;
-      color:#000;
+      font-family: "Brush Script MT", "Pacifico", cursive;
+      color:var(--logo-color);
+      letter-spacing:0.5px;
+      margin-top:4px;
+      margin-bottom:2px;
+      transform-origin:center;
+      opacity:0;
+      animation: drop-in 420ms var(--ease) forwards;
     }
 
-    /* form */
-    form { display:flex; flex-direction:column; gap:10px; }
-    label{ display:block; text-align:left; font-size:13px; color:var(--muted); margin-bottom:6px; }
-    input[type="text"], input[type="password"]{
+    @keyframes drop-in {
+      from { transform: translateY(-8px) scale(.98); opacity:0 }
+      to   { transform: translateY(0) scale(1); opacity:1 }
+    }
+
+    /* Form styles */
+    form { width:100%; display:flex; flex-direction:column; gap:12px; }
+    label { font-size:13px; color:var(--muted); display:block; }
+    .input {
       width:100%;
       padding:10px 12px;
       font-size:14px;
       border:1px solid var(--input-border);
-      border-radius:4px;
-      background:transparent;
-      box-sizing:border-box;
-    }
-    input:focus{
+      border-radius:var(--radius-input);
       outline:none;
-      box-shadow:0 0 0 2px rgba(0,149,246,0.12);
-      border-color:rgba(0,0,0,0.12);
-    }
-
-    .btn{
-      display:inline-block;
-      width:100%;
-      padding:9px 12px;
-      font-weight:600;
-      font-size:14px;
-      border-radius:4px;
-      border:none;
-      cursor:pointer;
-      color:#fff;
-      background:var(--accent);
-    }
-    .btn.secondary{
       background:transparent;
-      color:var(--accent);
-      border:1px solid transparent;
+      transition: box-shadow 160ms var(--ease), border-color 160ms var(--ease), transform 160ms var(--ease);
     }
+    .input:focus {
+      box-shadow: 0 0 0 4px rgba(0,149,246,0.08);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .button {
+      width:100%;
+      padding:10px 12px;
+      font-size:14px;
+      font-weight:700;
+      border-radius:var(--radius-input);
+      border: none;
+      cursor:pointer;
+      background:var(--primary);
+      color: #fff;
+      outline:none;
+      transition: transform 120ms var(--ease), box-shadow 120ms var(--ease), opacity 120ms var(--ease);
+    }
+    .button:active { transform: translateY(1px); }
+    .button[disabled] { opacity:0.6; cursor:not-allowed; }
 
-    .forgot{
-      margin-top:6px;
+    .forgot {
       font-size:13px;
       color:var(--muted);
-      text-decoration:none;
-      display:block;
-    }
-
-    .divider{
-      display:flex;
-      align-items:center;
-      gap:16px;
-      margin:16px 0;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .divider:before, .divider:after{
-      content:'';
-      flex:1;
-      height:1px;
-      background:var(--input-border);
-    }
-
-    /* create account card */
-    .card.small{
-      max-width:350px;
-      padding:18px 28px;
-      margin-top:12px;
       text-align:center;
+      margin-top:6px;
+      text-decoration:none;
     }
 
-    /* bottom meta */
-    .meta{
-      margin-top:18px;
-      font-size:12px;
-      color:var(--muted);
+    /* Divider OR */
+    .divider {
+      width:100%;
       display:flex;
       align-items:center;
+      gap:12px;
+      margin:6px 0;
+    }
+    .divider hr {
+      flex:1;
+      border: none;
+      height:1px;
+      background: #e6e6e6;
+    }
+    .or {
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+      min-width:28px;
+    }
+
+    /* Transparent create account button */
+    .ghost {
+      width:100%;
+      padding:10px 12px;
+      border-radius:var(--radius-input);
+      border:none;
+      background:transparent;
+      font-weight:700;
+      color:var(--primary);
+      cursor:pointer;
+      font-size:14px;
+    }
+
+    /* Meta footer */
+    .meta {
+      margin-top:6px;
+      display:flex;
       gap:8px;
-      justify-content:center;
+      align-items:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .meta img { width:18px; height:18px; display:block; opacity:0.9; }
+
+    /* Small responsive tweaks */
+    @media (max-width: 880px) {
+      .cards { gap:18px; flex-direction:column; align-items:center; padding: 8px; }
+      .card { padding:32px; }
     }
 
-    /* responsive */
-    @media (max-width:880px){
-      .wrap{flex-direction:column}
-      .card{max-width:360px}
+    @media (min-width: 880px) {
+      .card { align-items:center; }
     }
 
-    /* small helper */
-    .muted-small{font-size:13px; color:var(--muted)}
+    /* Utility: subtle entrance */
+    .card { opacity:0; transform: translateY(8px); animation: fade-up 420ms var(--ease) forwards; }
+    .card.signup { animation-delay: 120ms; }
+    @keyframes fade-up {
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    /* Small helper for note text inside signup card */
+    .signup-note { font-size:13px; color:var(--muted); text-align:center; line-height:1.4; }
+
+    /* Small link style */
+    a.link { color:var(--primary); text-decoration:none; font-weight:600; }
   </style>
 </head>
 <body>
-  <div class="wrap" role="main" aria-labelledby="page-title">
-    <div style="width:100%;max-width:420px">
-      <div class="card" aria-labelledby="login-heading">
+  <main class="page" role="main" aria-label="Login page">
+    <section class="cards" aria-live="polite">
+      <!-- LOGIN CARD -->
+      <aside class="card login" aria-labelledby="login-heading">
         <div class="lang" aria-hidden="true">English (US)</div>
 
-        <div id="login-heading" class="logo">Instagram</div>
+        <div id="login-heading" class="logo" aria-hidden="false">Instagram</div>
 
-        <form id="loginForm" autocomplete="on" novalidate>
+        <form id="loginForm" novalidate>
           <div>
-            <label for="user">Username, email or mobile number</label>
-            <input id="user" name="user" type="text" inputmode="email" autocomplete="username" required />
+            <label for="username">Username, email or mobile number</label>
+            <input id="username" name="username" class="input"
+                   type="text" autocomplete="username" inputmode="email"
+                   aria-label="Username, email or mobile number"
+                   placeholder="Username or email" required>
           </div>
 
           <div>
-            <label for="pass">Password</label>
-            <input id="pass" name="pass" type="password" autocomplete="current-password" required />
+            <label for="password">Password</label>
+            <input id="password" name="password" class="input"
+                   type="password" autocomplete="current-password"
+                   aria-label="Password" placeholder="Password" required>
           </div>
 
-          <button class="btn" type="submit">Log in</button>
+          <button class="button" id="loginBtn" type="submit" aria-label="Log in to your account">Log In</button>
+
+          <a href="#" class="forgot" id="forgotLink">Forgot password?</a>
+
+          <div class="divider" aria-hidden="true">
+            <hr />
+            <div class="or">OR</div>
+            <hr />
+          </div>
+
+          <button type="button" class="ghost" id="createAccount" aria-label="Create a new account">Create new account</button>
         </form>
 
-        <a href="#" class="forgot" id="forgotLink">Forgot password?</a>
-
-        <div class="divider">OR</div>
-
-        <div style="margin-top:6px">
-          <button class="btn secondary" id="createBtn" aria-label="Create new account">Create new account</button>
-        </div>
-
-        <div class="meta" aria-hidden="true" style="margin-top:18px">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="10" stroke="#8e8e8e" stroke-width="1.2"></circle>
-            <path d="M8 12h8" stroke="#8e8e8e" stroke-width="1.2" stroke-linecap="round"></path>
+        <div class="meta" aria-hidden="true">
+          <!-- small meta icon (SVG) -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12c0 2.3.77 4.41 2.07 6.12L4 22l3.88-.83C9.59 21.23 10.79 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z" fill="#8e8e8e"/>
           </svg>
-          <div class="muted-small">Meta</div>
+          <div>Meta</div>
         </div>
-      </div>
+      </aside>
 
-      <div class="card small" style="text-align:center">
-        <div class="muted-small">Don't have an account?</div>
-        <div style="margin-top:10px">
-          <button class="btn" onclick="alert('Sign up flow placeholder')">Sign up</button>
-        </div>
-      </div>
-    </div>
-  </div>
+      <!-- SIGNUP CARD -->
+      <aside class="card signup" aria-labelledby="signup-heading">
+        <div id="signup-heading" class="logo" style="font-size:22px; margin-top:6px; margin-bottom:6px;">New here?</div>
+
+        <p class="signup-note">Sign up to see photos and videos from your friends.</p>
+
+        <form id="signupForm" novalidate>
+          <div>
+            <label for="newUsername">Mobile number or email</label>
+            <input id="newUsername" name="newUsername" class="input"
+                   type="email" autocomplete="email" inputmode="email"
+                   aria-label="Mobile number or email"
+                   placeholder="Email or mobile number" required>
+          </div>
+
+          <div>
+            <label for="fullName">Full name</label>
+            <input id="fullName" name="fullName" class="input"
+                   type="text" autocomplete="name"
+                   aria-label="Full name" placeholder="Full name" required>
+          </div>
+
+          <div>
+            <label for="newPassword">Password</label>
+            <input id="newPassword" name="newPassword" class="input"
+                   type="password" autocomplete="new-password"
+                   aria-label="Create password" placeholder="Password" required>
+          </div>
+
+          <button class="button" type="submit" aria-label="Create account">Sign up</button>
+
+          <div class="divider" aria-hidden="true" style="margin-top:6px;">
+            <hr />
+            <div class="or">OR</div>
+            <hr />
+          </div>
+
+          <p class="signup-note" style="margin-bottom:4px;">Have an account? <a href="#login" class="link" id="switchToLogin">Log in</a></p>
+        </form>
+
+      </aside>
+    </section>
+  </main>
 
   <script>
-    // Small demo script: prevent real submission and show basic validation
-    document.getElementById('loginForm').addEventListener('submit', function(e){
-      e.preventDefault();
-      const user = document.getElementById('user').value.trim();
-      const pass = document.getElementById('pass').value;
-      if(!user || !pass){
-        alert('Please enter username and password.');
-        return;
-      }
-      // demo behavior only
-      alert('Login submitted: ' + user);
-    });
+    // Accessibility + submission guards
+    (function(){
+      const loginForm = document.getElementById('loginForm');
+      const loginBtn = document.getElementById('loginBtn');
+      const username = document.getElementById('username');
+      const password = document.getElementById('password');
 
-    // Keyboard accessibility for secondary buttons
-    document.getElementById('createBtn').addEventListener('click', function(){
-      alert('Create account placeholder');
-    });
+      const signupForm = document.getElementById('signupForm');
+
+      function setBtnState(btn, enabled){
+        if(enabled){
+          btn.removeAttribute('disabled');
+        } else {
+          btn.setAttribute('disabled', 'disabled');
+        }
+      }
+
+      // Basic enable/disable logic for login
+      function checkLogin() {
+        const ok = username.value.trim().length > 0 && password.value.trim().length > 0;
+        setBtnState(loginBtn, ok);
+      }
+
+      username.addEventListener('input', checkLogin);
+      password.addEventListener('input', checkLogin);
+      checkLogin();
+
+      loginForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        // final check
+        if(username.value.trim() === "" || password.value.trim() === "") {
+          username.focus();
+          return;
+        }
+        // Demo: show a lightweight success state and disable button briefly
+        setBtnState(loginBtn, false);
+        loginBtn.textContent = "Logging in…";
+        setTimeout(() => {
+          loginBtn.textContent = "Log In";
+          setBtnState(loginBtn, true);
+          alert("Demo: login submitted (no server).");
+        }, 900);
+      });
+
+      // Signup form: simple validation
+      signupForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const email = document.getElementById('newUsername').value.trim();
+        const fullName = document.getElementById('fullName').value.trim();
+        const newPass = document.getElementById('newPassword').value.trim();
+        if(!email || !fullName || !newPass) {
+          // focus first missing
+          (email || fullName || newPass) && null;
+          if(!email) { document.getElementById('newUsername').focus(); return; }
+          if(!fullName) { document.getElementById('fullName').focus(); return; }
+          if(!newPass) { document.getElementById('newPassword').focus(); return; }
+        }
+        alert("Demo: signup submitted (no server).");
+      });
+
+      // Switch link: move focus to login
+      document.getElementById('switchToLogin').addEventListener('click', function(e){
+        e.preventDefault();
+        username.focus();
+        // On larger screens, visually scroll is unnecessary, but ensure focus
+      });
+
+      // "Forgot" link handler (demo)
+      document.getElementById('forgotLink').addEventListener('click', function(e){
+        e.preventDefault();
+        const email = username.value.trim();
+        const msg = email ? `Password reset link would be sent to ${email} (demo).` : "Please enter username or email above to reset password.";
+        alert(msg);
+      });
+
+      // Keyboard: pressing Enter on inputs of login triggers form automatically (native)
+    })();
   </script>
 </body>
-  </html>
+</html>
